@@ -1,0 +1,14 @@
+# Secrets
+base/secret.yaml
+*/secret.yaml
+
+# Kustomize
+kustomization.yaml.bak
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

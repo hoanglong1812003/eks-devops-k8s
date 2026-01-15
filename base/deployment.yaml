@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-app
+  labels:
+    app: chatbot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatbot-app
+  template:
+    metadata:
+      labels:
+        app: chatbot-app
+    spec:
+      containers:
+      - name: chatbot
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/chatbot-app:latest
+        ports:
+        - containerPort: 8501
+          name: http
+        envFrom:
+        - configMapRef:
+            name: chatbot-config
+        - secretRef:
+            name: chatbot-secret
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+        - name: vectorstore
+          mountPath: /app/vectorstore
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: vectorstore
+        persistentVolumeClaim:
+          claimName: chatbot-pvc
