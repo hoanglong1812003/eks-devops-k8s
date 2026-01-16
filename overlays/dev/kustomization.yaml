@@ -9,7 +9,7 @@ resources:
 namePrefix: dev-
 
 images:
-- name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/chatbot-app
+- name: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
   newTag: latest
 
 patches:

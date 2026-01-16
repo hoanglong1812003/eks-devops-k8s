@@ -5,28 +5,28 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  
+
   source:
-    repoURL: https://github.com/<YOUR_ORG>/eks-devops-k8s.git
+    repoURL: https://github.com/hoanglong1812003/eks-devops-k8s.git
     targetRevision: main
     path: overlays/dev
-  
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev
-  
+    namespace: default  
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: false
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   revisionHistoryLimit: 3

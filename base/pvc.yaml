@@ -4,8 +4,7 @@ metadata:
   name: chatbot-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: gp3
+      storage: 1Gi
