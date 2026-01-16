@@ -4,13 +4,14 @@ kind: Kustomization
 namespace: dev
 
 resources:
-- ../../base
+  - ../../base
 
 namePrefix: dev-
 
 images:
-- name: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
-  newTag: latest
+  - name: fcj-chatbot
+    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
+    newTag: latest
 
 patches:
-- path: patch.yaml
+  - path: patch.yaml
