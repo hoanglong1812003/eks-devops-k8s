@@ -18,7 +18,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: chatbot
-          image: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:v1.0.2
+          image: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:latest
           ports:
             - containerPort: 8501
               name: http
