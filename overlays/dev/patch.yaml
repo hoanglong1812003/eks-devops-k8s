@@ -22,14 +22,6 @@ spec:
             memory: "512Mi"
             cpu: "250m"
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: chatbot-config
-data:
-  ENVIRONMENT: "development"
-  LOG_LEVEL: "DEBUG"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,15 +45,3 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "250m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5

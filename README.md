@@ -2,7 +2,7 @@
 
 GitOps repository để deploy chatbot từ eks-devops-app lên EKS cluster.
 
-## 📁 Cấu trúc
+## 📁 Cấu trúcc
 
 ```
 eks-devops-k8s/
