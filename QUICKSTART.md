@@ -2,6 +2,16 @@
 
 ## Deploy cả 2 apps trong 5 phút
 
+### 0. Xóa resources cũ (nếu đã deploy trước đó)
+
+```bash
+# Xóa namespace cũ để tránh conflict
+kubectl delete namespace dev
+
+# Đợi namespace bị xóa hoàn toàn
+kubectl wait --for=delete namespace/dev --timeout=60s
+```
+
 ### 1. Tạo ECR Secret
 
 ```bash
