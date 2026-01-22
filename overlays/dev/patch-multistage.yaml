@@ -1,0 +1,10 @@
+apiVersion: apps/v3
+kind: Deployment
+metadata:
+  name: multistage-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: multistage
+        image: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:0739900c3242d54aaf35e2ba679eb339f6bbcb94
