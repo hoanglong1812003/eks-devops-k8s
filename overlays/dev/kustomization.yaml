@@ -5,10 +5,18 @@ namespace: dev
 
 resources:
   - ../../base
-  - patch-chatbot.yaml
-  - patch-multistage.yaml
 
 namePrefix: dev-
+
+patches:
+  - path: patch-chatbot.yaml
+    target:
+      kind: Deployment
+      name: chatbot-app
+  - path: patch-multistage.yaml
+    target:
+      kind: Deployment
+      name: multistage-app
 
 images:
   - name: chatbot
