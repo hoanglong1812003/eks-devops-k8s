@@ -5,6 +5,7 @@ namespace: dev
 
 resources:
   - ../../base
+  - patch.yaml
 
 namePrefix: dev-
 
@@ -16,5 +17,3 @@ images:
     newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
     newTag: 0739900c3242d54aaf35e2ba679eb339f6bbcb94
 
-patches:
-  - path: patch.yaml
