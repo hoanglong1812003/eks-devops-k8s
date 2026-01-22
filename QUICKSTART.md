@@ -59,13 +59,13 @@ argocd app sync multistage-app
 ### 5. Verify
 
 ```bash
-# Check pods (phải có 4 pods: 2 chatbot + 2 multistage)
+# Check pods (phải có 2 pods: 1 chatbot + 1 multistage)
 kubectl get pods -n dev
 
 # Expected output:
 # NAME                                  READY   STATUS    RESTARTS   AGE
-# dev-chatbot-app-xxx                   2/2     Running   0          2m
-# dev-multistage-app-xxx                2/2     Running   0          2m
+# dev-chatbot-app-xxx                   1/1     Running   0          2m
+# dev-multistage-app-xxx                1/1     Running   0          2m
 
 # Check services
 kubectl get svc -n dev

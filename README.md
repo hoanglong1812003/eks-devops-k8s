@@ -46,8 +46,9 @@ argocd app sync multistage-app
 
 | App | Replicas | CPU | Memory | Storage |
 |-----|----------|-----|--------|---------|
-| Chatbot | 2 | 100m-250m | 256Mi-512Mi | 1Gi PVC |
-| Multistage | 2 | 50m-100m | 128Mi-256Mi | - |
+| Chatbot | 1 | 100m-250m | 256Mi-512Mi | 1Gi PVC |
+| Multistage | 1 | 50m-100m | 128Mi-256Mi | - |
+
 
 ## 🔄 Update Image
 
