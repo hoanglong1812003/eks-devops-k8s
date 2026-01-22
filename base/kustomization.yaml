@@ -7,6 +7,7 @@ resources:
 - ingress.yaml
 - configmap.yaml
 - pvc.yaml
+- deployment-combined.yaml
 
 namespace: default
 

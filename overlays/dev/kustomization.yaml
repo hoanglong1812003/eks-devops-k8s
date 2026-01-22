@@ -12,6 +12,9 @@ images:
   - name: fcj-chatbot
     newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
     newTag: latest
+  - name: project2-web
+    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/project2-web
+    newTag: latest
 
 patches:
   - path: patch.yaml
