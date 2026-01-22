@@ -13,16 +13,9 @@ patches:
     target:
       kind: Deployment
       name: chatbot-app
-  - path: patch-multistage.yaml
-    target:
-      kind: Deployment
-      name: multistage-app
 
 images:
   - name: chatbot
     newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
     newTag: 1f9b8cafe4018f436a53eeca019de04c8306e37f
-  - name: multistage
-    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
-    newTag: 0739900c3242d54aaf35e2ba679eb339f6bbcb94
 
