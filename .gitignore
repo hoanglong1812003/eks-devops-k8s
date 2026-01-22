@@ -1,13 +1,11 @@
-# Secrets
-base/secret.yaml
-*/secret.yaml
-
-# Kustomize
-kustomization.yaml.bak
+# Secrets - NEVER commit
+**/secret.yaml
+!**/secret.yaml.example
 
 # IDE
 .vscode/
 .idea/
+*.swp
 
 # OS
 .DS_Store

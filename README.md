@@ -1,171 +1,66 @@
 # eks-devops-k8s
 
-GitOps repository để deploy chatbot từ eks-devops-app lên EKS cluster.
+GitOps repository để deploy 2 ứng dụng độc lập lên EKS với ArgoCD.
 
-## 📁 Cấu trúccc
+## 📁 Cấu trúc
 
 ```
 eks-devops-k8s/
-├── base/                    # Base Kubernetes manifests
-│   ├── deployment.yaml      # Chatbot deployment
-│   ├── service.yaml         # ClusterIP service
-│   ├── ingress.yaml         # ALB Ingress
-│   ├── configmap.yaml       # Environment variables
-│   ├── pvc.yaml            # PersistentVolumeClaim cho vectorstore
-│   ├── secret.yaml.example  # Secret template
-│   └── kustomization.yaml
-├── overlays/
-│   └── dev/                # Dev environment overlay
-│       ├── kustomization.yaml
-│       └── patch.yaml
+├── apps/
+│   ├── chatbot/          # Chatbot app (2 replicas)
+│   └── multistage/       # Multistage app (2 replicas)
 ├── argocd/
-│   └── application.yaml    # ArgoCD Application
-└── README.md
+│   ├── chatbot-app.yaml
+│   └── multistage-app.yaml
+├── cleanup.sh            # Xóa resources cũ
+└── QUICKSTART.md         # Hướng dẫn deploy
 ```
 
-## 🚀 Deployment
-
-### Prerequisites
-
-1. EKS cluster đã được tạo từ `eks-devops-infra`
-2. ECR repository `chatbot-app` đã có image
-3. ArgoCD đã được cài đặt trên cluster
-4. AWS Load Balancer Controller đã được cài đặt
-
-### Bước 1: Tạo Secret
+## 🚀 Quick Deploy
 
 ```bash
-# Copy và chỉnh sửa secret
-cp base/secret.yaml.example base/secret.yaml
+# 1. Xóa resources cũ (nếu có)
+./cleanup.sh  # hoặc cleanup.bat trên Windows
 
-# Encode base64 nếu cần
-echo -n "your-api-key" | base64
+# 2. Deploy với ArgoCD
+kubectl apply -f argocd/chatbot-app.yaml
+kubectl apply -f argocd/multistage-app.yaml
 
-# Apply secret
-kubectl apply -f base/secret.yaml -n dev
-```
+# 3. Tạo secrets
+kubectl create secret docker-registry ecr-secret \
+  --docker-server=145023123305.dkr.ecr.us-east-1.amazonaws.com \
+  --docker-username=AWS \
+  --docker-password=$(aws ecr get-login-password --region us-east-1) \
+  -n dev
 
-### Bước 2: Cập nhật Image URL
+kubectl create secret generic chatbot-secret \
+  --from-literal=OPENAI_API_KEY=sk-xxx \
+  -n dev
 
-Chỉnh sửa `overlays/dev/kustomization.yaml`:
-
-```yaml
-images:
-- name: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/chatbot-app
-  newTag: latest  # hoặc tag cụ thể từ CI/CD
-```
-
-### Bước 3: Deploy với ArgoCD
-
-```bash
-# Cập nhật repoURL trong argocd/application.yaml
-# Thay <YOUR_ORG> bằng GitHub org/username của bạn
-
-# Apply ArgoCD Application
-kubectl apply -f argocd/application.yaml
-
-# Kiểm tra sync status
-argocd app get chatbot-app
+# 4. Sync
 argocd app sync chatbot-app
+argocd app sync multistage-app
 ```
 
-### Bước 4: Kiểm tra Deployment
+## 📊 Resources
+
+| App | Replicas | CPU | Memory | Storage |
+|-----|----------|-----|--------|---------|
+| Chatbot | 2 | 100m-250m | 256Mi-512Mi | 1Gi PVC |
+| Multistage | 2 | 50m-100m | 128Mi-256Mi | - |
+
+## 🔄 Update Image
 
 ```bash
-# Check pods
-kubectl get pods -n dev
-
-# Check service
-kubectl get svc -n dev
-
-# Check ingress và lấy ALB URL
-kubectl get ingress -n dev
+cd apps/chatbot/overlays/dev
+kustomize edit set image fcj-chatbot=145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:NEW_TAG
+git commit -am "Update chatbot to NEW_TAG"
+git push
 ```
 
-## 🔄 CI/CD Integration
+ArgoCD tự động deploy trong 3 phút.
 
-Để tự động update image tag từ CI/CD pipeline:
+## 🔗 Images
 
-```bash
-# Trong GitHub Actions của eks-devops-app
-- name: Update K8s manifest
-  run: |
-    cd eks-devops-k8s
-    kustomize edit set image \
-      $ECR_REGISTRY/chatbot-app:$IMAGE_TAG
-    git commit -am "Update image to $IMAGE_TAG"
-    git push
-```
-
-## 📝 Customization
-
-### Dev Environment
-
-Chỉnh sửa `overlays/dev/patch.yaml` để override:
-- Resource limits
-- Environment variables
-- Replicas
-
-### Production Environment
-
-Tạo `overlays/prod/`:
-
-```bash
-mkdir -p overlays/prod
-cp overlays/dev/kustomization.yaml overlays/prod/
-# Chỉnh sửa cho production
-```
-
-## 🔧 Kustomize Commands
-
-```bash
-# Preview manifests
-kustomize build overlays/dev
-
-# Apply directly
-kubectl apply -k overlays/dev
-
-# Diff changes
-kubectl diff -k overlays/dev
-```
-
-## 📊 Monitoring
-
-```bash
-# Logs
-kubectl logs -f deployment/dev-chatbot-app -n dev
-
-# Describe pod
-kubectl describe pod -l app=chatbot-app -n dev
-
-# Port forward để test local
-kubectl port-forward svc/dev-chatbot-app 8501:80 -n dev
-```
-
-## 🔐 Security Notes
-
-- **KHÔNG commit** `base/secret.yaml` vào Git
-- Sử dụng AWS Secrets Manager hoặc External Secrets Operator cho production
-- Secret example chỉ dùng cho demo/lab
-
-## 🌐 Access Application
-
-Sau khi deploy thành công:
-
-```bash
-# Lấy ALB URL
-kubectl get ingress dev-chatbot-app -n dev -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-```
-
-Truy cập: `http://<ALB-URL>`
-
-## 🔗 Related Repositories
-
-- **eks-devops-app**: Source code và Dockerfile của chatbot
-- **eks-devops-infra**: Terraform để tạo EKS cluster và ECR
-
-## 📚 Resources
-
-- [Kustomize Documentation](https://kustomize.io/)
-- [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
-- [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/)
+- Chatbot: `145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:0739900c3242d54aaf35e2ba679eb339f6bbcb94`
+- Multistage: `145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-multistage:latest`

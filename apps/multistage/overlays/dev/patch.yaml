@@ -4,14 +4,3 @@ metadata:
   name: multistage-app
 spec:
   replicas: 2
-  template:
-    spec:
-      containers:
-        - name: multistage
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "512Mi"
-              cpu: "250m"
