@@ -49,11 +49,19 @@ kubectl create secret generic chatbot-secret \
   -n dev
 ```
 
-### 4. Sync ArgoCD
+### 4. Sync ArgoCD (chọn 1 trong 3 cách)
 
 ```bash
+# Cách 1: Dùng ArgoCD CLI (nếu đã cài)
 argocd app sync chatbot-app
 argocd app sync multistage-app
+
+# Cách 2: Dùng kubectl
+kubectl patch application chatbot-app -n argocd --type merge -p '{"operation":{"initiatedBy":{"username":"admin"},"sync":{"revision":"HEAD"}}}'
+kubectl patch application multistage-app -n argocd --type merge -p '{"operation":{"initiatedBy":{"username":"admin"},"sync":{"revision":"HEAD"}}}'
+
+# Cách 3: Đợi ArgoCD tự sync (3 phút)
+# ArgoCD sẽ tự động detect thay đổi và sync
 ```
 
 ### 5. Verify
