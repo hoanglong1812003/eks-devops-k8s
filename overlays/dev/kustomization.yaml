@@ -8,6 +8,14 @@ resources:
 
 namePrefix: dev-
 
+<<<<<<< HEAD
+=======
+images:
+  - name: fcj-chatbot
+    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
+    newTag: latest
+
+>>>>>>> parent of 3f3fd6e (Create file yaml for deploy 2 projects)
 patches:
   - path: patch-chatbot.yaml
     target:

@@ -18,7 +18,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: chatbot
-          image: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:1f9b8cafe4018f436a53eeca019de04c8306e37f
+          image: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot:de63008127d059ea7d4d898afbd7f5714ec466f1
           ports:
             - containerPort: 8501
               name: http
@@ -52,4 +52,8 @@ spec:
       volumes:
         - name: vectorstore
           persistentVolumeClaim:
+<<<<<<< HEAD:base/deployment-combined.yaml
             claimName: chatbot-pvc
+=======
+            claimName: chatbot-pvc
+>>>>>>> parent of 3f3fd6e (Create file yaml for deploy 2 projects):base/deployment.yaml
