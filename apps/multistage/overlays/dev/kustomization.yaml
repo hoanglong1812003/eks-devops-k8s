@@ -9,12 +9,12 @@ resources:
 namePrefix: dev-
 
 images:
-  - name: fcj-chatbot
-    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
+  - name: fcj-multistage
+    newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-multistage
     newTag: latest
 
 patches:
-  - path: patch-chatbot.yaml
+  - path: patch.yaml
     target:
       kind: Deployment
-      name: chatbot-app
+      name: multistage-app

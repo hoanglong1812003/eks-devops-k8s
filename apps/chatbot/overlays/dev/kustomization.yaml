@@ -11,10 +11,10 @@ namePrefix: dev-
 images:
   - name: fcj-chatbot
     newName: 145023123305.dkr.ecr.us-east-1.amazonaws.com/fcj-chatbot
-    newTag: latest
+    newTag: 0739900c3242d54aaf35e2ba679eb339f6bbcb94
 
 patches:
-  - path: patch-chatbot.yaml
+  - path: patch.yaml
     target:
       kind: Deployment
       name: chatbot-app
